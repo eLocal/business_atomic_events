@@ -24,12 +24,10 @@ module BusinessAtomicEvents
 
     def iterate_over_config(period_stop_time_str, start_time, stop_time)
       config = Rails.application.config_for(CONFIG_NAME)
-      with_readonly_db do
-        config.items.each do |c|
-          full_index = full_index_name(config[:index_prefix], c[:index])
-          Runner.perform_async(full_index, c[:query], start_time.to_s, stop_time.to_s) \
-            if period_stop_time_str.nil? || Flipper.enabled?("bae_history_#{c[:index]}".to_sym)
-        end
+      config.items.each do |c|
+        full_index = full_index_name(config[:index_prefix], c[:index])
+        Runner.perform_async(full_index, c[:query], start_time.to_s, stop_time.to_s) \
+          if period_stop_time_str.nil? || Flipper.enabled?("bae_history_#{c[:index]}".to_sym)
       end
     end
 
