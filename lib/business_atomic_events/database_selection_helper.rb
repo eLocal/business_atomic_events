@@ -22,6 +22,6 @@ module DatabaseSelectionHelper
   end
 
   def readonly_replica_exists?
-    Rails.env.production? || Rails.env.stage?
+    ActiveRecord::Base.configurations.configs_for(env_name: Rails.env, include_replicas: true).detect(&:replica?)
   end
 end
