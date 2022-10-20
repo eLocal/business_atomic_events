@@ -15,7 +15,7 @@ You may also want to constrain usage of the gem to production environment only.
 
 ### Application Code
 #### Open Search Credentials
-Add a file config/initializers/business_atomic_events.rb containing the following code to make sure
+Add `config/initializers/business_atomic_events.rb` file containing the following code to make sure
 your application has access to the credentials required to communicate with Open Search:
 ```
 # frozen_string_literal: true
@@ -30,7 +30,7 @@ end
 ```
 
 #### Configuration
-1. Ensure existence of Open Search indices that will receive data fed by this gem. Please refer to https://aws.amazon.com/opensearch-service/getting-started/ for details. Our existing Open Search cluster is here: https://search-john-test-duj2npqk5k27ffd2uwgb52rm7i.us-east-1.es.amazonaws.com`.
+1. Ensure existence of Open Search indices that will receive data fed by this gem. Please refer to https://aws.amazon.com/opensearch-service/getting-started/ for details. Our existing Open Search cluster is here: https://search-john-test-duj2npqk5k27ffd2uwgb52rm7i.us-east-1.es.amazonaws.com`. Index names should start with index prefixes which need to be the same for all indices of an application. For our major applications. Open search index name's structure is `<index_prefix>_<index>`, where both `index_prefix` and `index` are reflected in the YAML configuration file described below in (2).
 2. Create a configuration file `config/business_atomic_events.yml` which will define queries to populate Open Search indices (one query per index) and specify a target index for each query. A good example is the affiliates application's configuration file you can find here: `https://github.com/eLocal/affiliates/blob/master/config/business_atomic_events.yml`.
 3. Ensure that a periodic (cron-based) job named `BusinessAtomicEvents::FeedGenerator` runs a few minutes past each hour.
 
@@ -41,4 +41,6 @@ Flipper gem is a required dependency.
 
 ## Invoking Historic Feeds Generation
 While current feeds will be generated automatically via `BusinessAtomicEvents::FeedGenerator` cron-based job , historic feeds need to be triggered manually.  Log into one of the production servers via ssh and start rails console from the application directory via `bin/rails c` command.  Then, at the console prompt, start the historic feeds job for the required date interval, e.g.: 
-`BusinessAtomicEvents::SpawnHistoricFeeds.perform_async('2022-01-01', '2022-10-19')`.
+```
+BusinessAtomicEvents::SpawnHistoricFeeds.perform_async('2022-01-01', '2022-10-19')
+```
