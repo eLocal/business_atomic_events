@@ -23,6 +23,6 @@ module DatabaseSelectionHelper
 
   def readonly_replica_exists?
     @readonly_replica_exists ||= \
-      ActiveRecord::Base.configurations.configs_for(env_name: Rails.env, include_replicas: true).any?(&:replica?)
+      ActiveRecord::Base.configurations.configs_for(env_name: Rails.env, include_hidden: true).any?(&:replica?)
   end
 end
