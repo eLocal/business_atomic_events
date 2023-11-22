@@ -22,7 +22,13 @@ module DatabaseSelectionHelper
   end
 
   def readonly_replica_exists?
-    @readonly_replica_exists ||= \
-      ActiveRecord::Base.configurations.configs_for(env_name: Rails.env, include_hidden: true).any?(&:replica?)
+    return @readonly_replica_exists unless @readonly_replica_exists.nil?
+
+    conf = ActiveRecord::Base.configurations.configs_for(env_name: Rails.env, include_hidden: true) \
+                             .detect { |c| c.name == 'replica' } # PRIMARY DB replica exists
+
+    return @readonly_replica_exists = false if conf.blank?
+
+    @readonly_replica_exists = conf.configuration_hash[:replica] == true
   end
 end

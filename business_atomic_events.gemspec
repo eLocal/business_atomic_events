@@ -2,8 +2,8 @@
 
 Gem::Specification.new do |s|
   s.name        = 'business_atomic_events'
-  s.version     = '0.0.7'
-  s.date        = '2022-10-07'
+  s.version     = '0.0.8'
+  s.date        = '2023-11-22'
   s.summary     = 'Generate and send data about certain system events to OpenSearch'
   s.description = 'Generate and send data about certain system events to OpenSearch'
   s.authors     = ['Greg Garber']
