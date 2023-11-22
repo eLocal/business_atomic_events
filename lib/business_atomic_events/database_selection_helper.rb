@@ -6,7 +6,7 @@ module DatabaseSelectionHelper
   ROLE_WRITING = :writing
 
   def with_writable_db(&blk)
-    if readonly_replica_exists?
+    if main_replica_exists?
       ActiveRecord::Base.connected_to(role: ROLE_WRITING) { blk.call }
     else
       blk.call
@@ -14,21 +14,17 @@ module DatabaseSelectionHelper
   end
 
   def with_readonly_db(&blk)
-    if readonly_replica_exists?
+    if main_replica_exists?
       ActiveRecord::Base.connected_to(role: ROLE_READING) { blk.call }
     else
       blk.call # in environments with only one (writable) database, we cannot do any better than that
     end
   end
 
-  def readonly_replica_exists?
-    return @readonly_replica_exists unless @readonly_replica_exists.nil?
+  def main_replica_exists?
+    return @main_replica_exists unless @main_replica_exists.nil?
 
-    conf = ActiveRecord::Base.configurations.configs_for(env_name: Rails.env) \
-                             .detect { |c| c.name == 'replica' } # PRIMARY DB replica exists
-
-    return @readonly_replica_exists = false if conf.blank?
-
-    @readonly_replica_exists = conf.configuration_hash[:replica] == true
+    conf = ActiveRecord::Base.configurations.configs_for(env_name: Rails.env, name: 'replica', include_replicas: true)
+    @main_replica_exists = conf.present? && conf.replica?
   end
 end

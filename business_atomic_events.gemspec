@@ -2,10 +2,10 @@
 
 Gem::Specification.new do |s|
   s.name        = 'business_atomic_events'
-  s.version     = '0.0.9'
+  s.version     = '0.0.10'
   s.date        = '2023-11-22'
   s.summary     = 'Generate and send data about certain system events to OpenSearch'
-  s.description = 'Generate and send data about certain system events to OpenSearch'
+  s.description = 'Better test of main database replica existence'
   s.authors     = ['Greg Garber']
   s.email       = 'greg_garber@elocal.com'
   s.files       = ['lib/business_atomic_events.rb']
